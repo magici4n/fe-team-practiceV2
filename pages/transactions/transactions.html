@@ -15,7 +15,7 @@
       <header class="app-header">
         <div class="phone">
           <span>9:41</span>
-          <span> ●●● 5G 🔋</span> 
+          <span> ●●● 5G 🔋</span>
         </div>
         <div class="header-body">
           <div class="brand">
@@ -32,7 +32,7 @@
       <main class="app-main">
         <!--계좌 리스트 (상단)-->
         <section class="account-list">
-          <button type="button" class="account">전체 계좌</button>
+          <button type="button" class="account active">전체 계좌</button>
           <button type="button" class="account">우리 첫급여통장</button>
           <button type="button" class="account">우리 SUPER주거래통장</button>
           <button type="button" class="account">우리 청년도약계좌</button>
@@ -40,30 +40,13 @@
 
         <!--필터 버튼  button 태그를 사용-->
         <section class="filter-group">
-          <button type="button" class="filter-btn">전체</button>
+          <button type="button" class="filter-btn active">전체</button>
           <button type="button" class="filter-btn">입금</button>
           <button type="button" class="filter-btn">출금</button>
         </section>
 
         <!--TODO: 거래 내역 list-->
         <section id="tx-list" class="tx-list"></section>
-        <!--css 디자인 테스트용 (나중에 지워도됨)-->
-        <div class="tx-group">
-          <div class="tx-date">2026-08-23</div>
-          <div class="tx-card">
-            <div class="tx-left">
-              <div class="tx-icon out">⬆️</div>
-              <div class="tx-info">
-                <div class="tx-title">스타벅스 강남점</div>
-                <div class="tx-sub">09:12 · 우리 첫급여통장 <span class="badge done">완료</span></div>
-              </div>
-            </div>
-            <div class="tx-right">
-              <div class="tx-amount out">-5,800원</div>
-              <div class="tx-balance">잔액 2,384,560원</div>
-            </div>
-          </div>
-        </div>
       </main>
 
       <footer class="app-footer">
@@ -104,6 +87,9 @@
       </footer>
     </div>
   </div>
+
+  <!--vanila.js 연결-->
+  <script src="transactions.js"></script>
 </body>
 
 </html>
