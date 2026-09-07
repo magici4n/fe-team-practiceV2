@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>실습용 은행 앱 목업 (교육용)</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="transfer.css">
 </head>
 <body>
     <div class="disclaimer">
@@ -33,7 +33,7 @@
         </div>
     </div>
 
-    <section class="screen" id="screen-transfer">
+    <section class="screen active" id="screen-transfer">
         <div class="transfer-wrap">
 
         <!-- Step 1: recipient -->
@@ -73,7 +73,7 @@
             <div class="step-sub" id="step2Sub"></div>
 
             <div class="field-group">
-            <input type="text" inputmode="numeric" class="tinput" id="amountInput" placeholder="0" style="font-size:22px; font-family:var(--mono); text-align:right;">
+            <input type="text" inputmode="numeric" class="tinput" id="amountInput" placeholder="0">
             <div class="helper-text" id="amountHelper"></div>
             <div class="amount-quick">
                 <button data-amt="10000">+1만</button>
@@ -113,7 +113,17 @@
 
         </div>
     </section>
+
+    <!-- Bottom nav -->
+    <div class="bottom-nav">
+        <button class="nav-btn" data-nav="home"><span class="nav-icon">🏠</span><span class="nav-lbl">홈</span></button>
+        <button class="nav-btn active" data-nav="transfer"><span class="nav-icon">💸</span><span class="nav-lbl">이체</span></button>
+        <button class="nav-btn" data-nav="history"><span class="nav-icon">📋</span><span class="nav-lbl">거래내역</span></button>
+        <button class="nav-btn" data-action="toast" data-msg="전체메뉴는 이번 실습 범위 밖입니다"><span class="nav-icon">⋯</span><span class="nav-lbl">전체</span></button>
+    </div>
   </div>
+
+
 
 </body>
 </html>
