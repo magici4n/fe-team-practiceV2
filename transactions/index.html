@@ -1,86 +1,109 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>거래내역 조회</title>
-    <link rel="stylesheet", href="transactions.css"/> 
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>거래내역 조회</title>
+  <link rel="stylesheet" href="transactions.css">
 </head>
+
 <body>
-    <header class = "app-header"> 
-      <div class="phone">
-        <div class = "brand-name">W</div>
-        <div class = "brand-logo">우리 Won 실습뱅킹</div>
-      </div>
-      <div class="phone">
+  <!--전체 header, main, footer를 phone-mokup으로 감쌈-->
+  <div class="phone-mockup">
+    <div class="phone-screen">
+      <header class="app-header">
+        <div class="phone">
           <span>9:41</span>
           <span> ●●● 5G 🔋</span>
-      </div>
-      <div class="header-utils">
-        <button type="button" class="icon-btn" label="알림">🔔</button>
-        <button type="button" class="icon-btn" label="메뉴">☰</button>
-      </div>
-    </header>
+        </div>
+        <div class="header-body">
+          <div class="brand">
+            <div class="brand-name">W</div>
+            <div class="brand-logo">WON 실습뱅킹</div>
+          </div>
+          <div class="header-utils">
+            <button type="button" class="icon-btn" aria-label="알림">🔔</button>
+            <button type="button" class="icon-btn" aria-label="메뉴">☰</button>
+          </div>
+        </div>
+      </header>
 
-    <main class = "app-main">
-      <!--계좌 리스트 (상단)-->
-      <section class= "account-list">
-        <button type="button" class="account">전체 계좌</button>
-        <button type="button" class="account">우리 첫급여통장</button>
-        <button type="button" class="account">우리 첫급여통장</button>
-        <button type="button" class="account">우리 SUPER주거래통장</button>
-        <button type="button" class="account">우리 청년도약계좌</button>
-      </section>
+      <main class="app-main">
+        <!--계좌 리스트 (상단)-->
+        <section class="account-list">
+          <button type="button" class="account">전체 계좌</button>
+          <button type="button" class="account">우리 첫급여통장</button>
+          <button type="button" class="account">우리 SUPER주거래통장</button>
+          <button type="button" class="account">우리 청년도약계좌</button>
+        </section>
 
-      <!--필터 버튼  button 태그를 사용-->
-      <section class = "filter-group">
-        <button type="button" class="filter-btn">전체</button>
-        <button type="button" class="filter-btn">입금</button>
-        <button type="button" class="filter-btn">출금</button>
-      </section>
+        <!--필터 버튼  button 태그를 사용-->
+        <section class="filter-group">
+          <button type="button" class="filter-btn">전체</button>
+          <button type="button" class="filter-btn">입금</button>
+          <button type="button" class="filter-btn">출금</button>
+        </section>
 
-      <!--거래 내역 list-->
-      <section id="tx-list" class = "tx-list">
+        <!--TODO: 거래 내역 list-->
+        <section id="tx-list" class="tx-list"></section>
+        <!--css 디자인 테스트용 (나중에 지워도됨)-->
+        <div class="tx-group">
+          <div class="tx-date">2026-08-23</div>
+          <div class="tx-card">
+            <div class="tx-left">
+              <div class="tx-icon out">⬆️</div>
+              <div class="tx-info">
+                <div class="tx-title">스타벅스 강남점</div>
+                <div class="tx-sub">09:12 · 우리 첫급여통장 <span class="badge done">완료</span></div>
+              </div>
+            </div>
+            <div class="tx-right">
+              <div class="tx-amount out">-5,800원</div>
+              <div class="tx-balance">잔액 2,384,560원</div>
+            </div>
+          </div>
+        </div>
+      </main>
 
-
-
-
-
-
-
-
-
-      </section>      
-    </main>
-
-    <footer class = "app-footer">
-      <!--3개의 항목을 리스트식으로 나타냄을 알려주기 위함 <ul>, <li>
+      <footer class="app-footer">
+        <!--3개의 항목을 리스트식으로 나타냄을 알려주기 위함 <ul>, <li>
       & 이동을 의미하는 nav 태그 안에 위치하도록 & -->
-      <nav class = "button-nav">
-        <ul>
-          <li>
-            <a class = "home" href ="">
-              <span class = "nav-icon">🏠</span>
-              <span class = "nav-label">홈</span>
-            </a>
-          </li>
+        <nav class="button-nav">
+          <ul>
+            <li>
+              <a class="home" href="">
+                <span class="nav-icon">🏠</span>
+                <span class="nav-label">홈</span>
+              </a>
+            </li>
 
-          <li>
-            <a class = "transfer" href ="">
-              <span class = "transfer-icon">💸</span>
-              <span class = "transfer-label">이체</span>
-            </a>
-          </li>
+            <li>
+              <a class="transfer" href="">
+                <span class="transfer-icon">💸</span>
+                <span class="transfer-label">이체</span>
+              </a>
+            </li>
 
-          <li>
-            <a class = "tx-list" href ="">
-              <span class = "tx-icon">🫱🏻‍🫲🏻</span>
-              <span class = "tx-label">거래 내역</span>
-            </a>
-          </li>
-          
-        </ul>
-      </nav>
-    </footer>
+            <li>
+              <a class="tx-list" href="">
+                <span class="tx-icon">🫱🏻‍🫲🏻</span>
+                <span class="tx-label">거래 내역</span>
+              </a>
+            </li>
+
+            <li>
+              <a class="total" href="">
+                <span class="total-icon">⋯</span>
+                <span class="total-label">전체</span>
+              </a>
+            </li>
+
+          </ul>
+        </nav>
+      </footer>
+    </div>
+  </div>
 </body>
+
 </html>
