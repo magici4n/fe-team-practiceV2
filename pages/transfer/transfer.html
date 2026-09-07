@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>실습용 은행 앱 목업 (교육용)</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="disclaimer">
+        🎓 이 화면은 교육용으로 제작된 은행 앱 목업입니다. 실제 우리WON뱅킹 앱이 아니며, <b>Express API 서버(localhost:4000)에 연결된 버전</b>입니다. 서버를 먼저 실행해주세요 (<code>npm start</code>).
+    </div>
+    <div class="conn-status loading" id="connStatus">
+     <span class="dot loading"></span> API 서버 연결 확인 중...
+    </div>
+
+    
+  <div class="phone">
+    <div class="statusbar">
+        <span>9:41</span>
+        <span class="icons">●●● 5G 🔋</span>
+    </div>
+
+    <div class="app-header">
+        <div class="brand">
+        <div class="brand-mark">W</div>
+        <div class="brand-name">WON 실습뱅킹</div>
+        </div>
+    
+        <div class="header-icons">
+            <span>🔔<span class="badge-dot"></span></span>
+            <span>☰</span>
+        </div>
+    </div>
+
+    <section class="screen" id="screen-transfer">
+        <div class="transfer-wrap">
+
+        <!-- Step 1: recipient -->
+        <div id="transferStep1">
+            <div class="step-title">누구에게 보낼까요?</div>
+            <div class="step-sub">출금 계좌와 받는 분의 계좌 정보를 입력해주세요</div>
+
+            <div class="field-group">
+            <label class="field-label">출금 계좌</label>
+            <select class="tinput" id="fromAccountSelect"></select>
+            </div>
+
+            <div class="field-group">
+            <label class="field-label">받는 은행</label>
+            <select class="tinput" id="toBankSelect">
+                <option>우리은행</option>
+                <option>국민은행</option>
+                <option>신한은행</option>
+                <option>하나은행</option>
+                <option>카카오뱅크</option>
+            </select>
+            </div>
+
+            <div class="field-group">
+            <label class="field-label">계좌번호</label>
+            <input type="text" class="tinput" id="toAccountInput" placeholder="- 없이 숫자만 입력 (예: 1002123456789)">
+            <div class="owner-chip" id="ownerChip">✓ 예금주 <span id="ownerName"></span>님 확인됨</div>
+            <div class="field-hint" id="lookupHint">테스트용 등록 계좌: <code>1002123456789</code>(김민준), <code>1002987654321</code>(이서연), <code>1102555666777</code>(박지훈)</div>
+            </div>
+
+            <button class="primary-btn" id="toStep2Btn" disabled>다음</button>
+        </div>
+
+        <!-- Step 2: amount -->
+        <div id="transferStep2" style="display:none;">
+            <div class="step-title">얼마를 보낼까요?</div>
+            <div class="step-sub" id="step2Sub"></div>
+
+            <div class="field-group">
+            <input type="text" inputmode="numeric" class="tinput" id="amountInput" placeholder="0" style="font-size:22px; font-family:var(--mono); text-align:right;">
+            <div class="helper-text" id="amountHelper"></div>
+            <div class="amount-quick">
+                <button data-amt="10000">+1만</button>
+                <button data-amt="50000">+5만</button>
+                <button data-amt="100000">+10만</button>
+                <button data-amt="clear">직접입력</button>
+            </div>
+            </div>
+
+            <button class="primary-btn" id="toStep3Btn" disabled>다음</button>
+            <button class="secondary-btn" id="backToStep1Btn">이전으로</button>
+        </div>
+
+        <!-- Step 3: confirm -->
+        <div id="transferStep3" style="display:none;">
+            <div class="step-title">이체 내용을 확인해주세요</div>
+            <div class="confirm-card">
+            <div class="confirm-row"><span class="k">받는 분</span><span class="v" id="confirmBank"></span></div>
+            <div class="confirm-row"><span class="k">계좌번호</span><span class="v" id="confirmAccount"></span></div>
+            <div class="confirm-row"><span class="k">예금주</span><span class="v" id="confirmOwner"></span></div>
+            <div class="confirm-row"><span class="k">출금 계좌</span><span class="v" id="confirmFrom"></span></div>
+            <div class="confirm-row total"><span class="k">이체 금액</span><span class="v" id="confirmAmount"></span></div>
+            </div>
+            <button class="primary-btn" id="submitTransferBtn">이체하기</button>
+            <button class="secondary-btn" id="backToStep2Btn">이전으로</button>
+        </div>
+
+        <!-- Step 4: success -->
+        <div id="transferStep4" style="display:none;">
+            <div class="success-wrap">
+            <div class="success-icon">✓</div>
+            <h2>이체가 완료되었습니다</h2>
+            <p id="successDesc"></p>
+            </div>
+            <button class="primary-btn" id="doneTransferBtn">홈으로</button>
+        </div>
+
+        </div>
+    </section>
+  </div>
+
+</body>
+</html>
