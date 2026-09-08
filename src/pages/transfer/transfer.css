@@ -1,0 +1,245 @@
+.transfer-page .primary-btn {
+    width: 100%;
+    font-family: var(--sans);
+    font-size: 15px;
+    font-weight: 800;
+    color: #fff;
+    background: var(--brand);
+    border: none;
+    border-radius: 14px;
+    padding: 15px;
+    cursor: pointer;
+    transition: background 0.15s, opacity 0.15s;
+    margin-top: 6px;
+}
+
+.transfer-page .primary-btn:hover {
+    background: var(--brand-deep);
+}
+
+.transfer-page .primary-btn:disabled {
+    background: var(--steel);
+    opacity: 1;
+    cursor: not-allowed;
+}
+
+.transfer-page .secondary-btn {
+    width: 100%;
+    font-family: var(--sans);
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--charcoal);
+    background: var(--canvas);
+    border: 1.5px solid var(--hairline);
+    border-radius: 14px;
+    padding: 13px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.transfer-page .transfer-wrap {
+    padding: 8px 20px;
+}
+
+.transfer-page .step-title {
+    font-size: 18px;
+    font-weight: 800;
+    margin: 6px 0 4px;
+    letter-spacing: -0.02em;
+}
+
+.transfer-page .step-sub {
+    font-size: 12.5px;
+    color: var(--graphite);
+    margin-bottom: 20px;
+}
+
+/* ===== Form fields ===== */
+.transfer-page .field-group {
+    margin-bottom: 18px;
+}
+
+.transfer-page .field-label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--charcoal);
+}
+
+.transfer-page select.tinput,
+.transfer-page input.tinput {
+    width: 100%;
+    font-family: var(--sans);
+    font-size: 14.5px;
+    font-weight: 600;
+    color: var(--ink);
+    background: var(--cloud);
+    border: 1.5px solid transparent;
+    border-radius: 12px;
+    padding: 13px 14px;
+    outline: none;
+    transition: border-color 0.15s;
+}
+
+.transfer-page select.tinput:focus,
+.transfer-page input.tinput:focus {
+    border-color: var(--brand-bright);
+    background: var(--canvas);
+}
+
+.transfer-page input.tinput.err {
+    border-color: var(--coral);
+    background: var(--coral-soft);
+}
+
+.transfer-page input.tinput.ok {
+    border-color: var(--mint);
+}
+
+.transfer-page .field-hint {
+    margin-top: 6px;
+    font-size: 11px;
+    color: var(--graphite);
+    line-height: 1.6;
+}
+
+.transfer-page .field-hint code {
+    font-family: var(--mono);
+    background: var(--cloud);
+    padding: 1px 5px;
+    border-radius: 4px;
+}
+
+.transfer-page .helper-text {
+    margin-top: 6px;
+    padding-left: 2px;
+    font-size: 11.5px;
+}
+
+.transfer-page .helper-text.err {
+    color: var(--coral);
+}
+
+.transfer-page .helper-text.ok {
+    color: var(--mint);
+}
+
+.transfer-page .helper-text.muted {
+    color: var(--graphite);
+}
+
+/* ===== 예금주 확인 ===== */
+.transfer-page .owner-chip {
+    display: none;
+    align-items: center;
+    gap: 6px;
+    margin-top: 8px;
+    background: var(--mint-soft);
+    color: var(--mint);
+    font-size: 12.5px;
+    font-weight: 700;
+    padding: 7px 12px;
+    border-radius: 9999px;
+    width: fit-content;
+}
+
+.transfer-page .owner-chip.show {
+    display: flex;
+}
+
+/* ===== 금액 입력 ===== */
+.transfer-page #amountInput {
+    font-size: 22px;
+    font-family: var(--mono);
+    text-align: right;
+}
+
+.transfer-page .amount-quick {
+    display: flex;
+    gap: 6px;
+    margin-top: 10px;
+    flex-wrap: wrap;
+}
+
+.transfer-page .amount-quick button {
+    font-family: var(--sans);
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--charcoal);
+    background: var(--cloud);
+    border: 1px solid var(--hairline);
+    border-radius: 8px;
+    padding: 6px 11px;
+    cursor: pointer;
+}
+
+.transfer-page .amount-quick button:hover {
+    border-color: var(--brand-bright);
+    color: var(--brand-deep);
+}
+
+/* ===== 이체 내용 확인 ===== */
+.transfer-page .confirm-card {
+    background: var(--brand-softer);
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.transfer-page .confirm-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 9px 0;
+    font-size: 13.5px;
+}
+
+.transfer-page .confirm-row .k {
+    color: var(--graphite);
+}
+
+.transfer-page .confirm-row .v {
+    font-weight: 700;
+}
+
+.transfer-page .confirm-row.total {
+    border-top: 1px dashed var(--steel);
+    margin-top: 6px;
+    padding-top: 14px;
+}
+
+.transfer-page .confirm-row.total .v {
+    font-size: 18px;
+    color: var(--brand-deep);
+    font-family: var(--mono);
+}
+
+/* ===== 이체 완료 ===== */
+.transfer-page .success-wrap {
+    text-align: center;
+    padding: 40px 20px 10px;
+}
+
+.transfer-page .success-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: var(--mint-soft);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 18px;
+    color: var(--mint);
+    font-size: 30px;
+}
+
+.transfer-page .success-wrap h2 {
+    margin: 0 0 8px;
+    font-size: 19px;
+}
+
+.transfer-page .success-wrap p {
+    margin: 0 0 24px;
+    font-size: 13px;
+    color: var(--graphite);
+}

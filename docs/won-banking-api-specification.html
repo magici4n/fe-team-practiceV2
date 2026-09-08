@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>실습뱅킹 API 명세서</title>
+<style>
+  :root{
+    --brand: #0067ac;
+    --brand-deep: #004b80;
+    --brand-bright: #1e88d6;
+    --brand-soft: #e8f1f9;
+    --ink: #1a1d21;
+    --charcoal: #40464d;
+    --graphite: #6b7280;
+    --steel: #c4cad1;
+    --hairline: #e6e9ed;
+    --canvas: #ffffff;
+    --cloud: #f5f7f9;
+    --get: #0e8a5f; --get-soft: #e5f6ee;
+    --post: #b3560a; --post-soft: #fdf0e2;
+    --coral: #d64545; --coral-soft: #fbe9e9;
+    --sans: "Pretendard", "Apple SD Gothic Neo", -apple-system, "Segoe UI", sans-serif;
+    --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  }
+  *{ box-sizing:border-box; }
+  html{ scroll-behavior:smooth; }
+  body{ margin:0; font-family: var(--sans); color: var(--ink); background: var(--canvas); }
+
+  .layout{ display:flex; min-height:100vh; }
+
+  .sidebar{
+    width: 260px; flex-shrink:0; background: var(--cloud); border-right:1px solid var(--hairline);
+    padding: 28px 20px; position: sticky; top:0; height:100vh; overflow-y:auto;
+  }
+  .sidebar .logo{ font-size:15px; font-weight:800; color: var(--brand-deep); margin-bottom:4px; }
+  .sidebar .ver{ font-size:11.5px; color: var(--graphite); margin-bottom:26px; }
+  .sidebar nav{ display:flex; flex-direction:column; gap:2px; }
+  .sidebar .group-label{ font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.05em; color: var(--graphite); margin: 18px 0 6px; }
+  .sidebar a{
+    display:flex; align-items:center; gap:8px; text-decoration:none; color: var(--charcoal);
+    font-size:13px; padding: 7px 10px; border-radius:8px; transition: background .12s;
+  }
+  .sidebar a:hover{ background: #ffffff; }
+  .sidebar a .m{
+    font-family: var(--mono); font-size:9.5px; font-weight:800; padding:2px 5px; border-radius:4px; flex-shrink:0; width:34px; text-align:center;
+  }
+  .sidebar a .m.get{ background: var(--get-soft); color: var(--get); }
+  .sidebar a .m.post{ background: var(--post-soft); color: var(--post); }
+
+  .content{ flex:1; max-width: 860px; padding: 44px 48px 100px; }
+
+  .page-title{ font-size:28px; font-weight:800; letter-spacing:-0.02em; margin: 0 0 10px; }
+  .page-desc{ font-size:14.5px; color: var(--charcoal); line-height:1.7; margin: 0 0 30px; max-width: 620px; }
+
+  .overview-box{
+    background: var(--brand-soft); border-radius:14px; padding:20px 24px; margin-bottom: 46px;
+  }
+  .overview-box .row{ display:flex; gap:10px; padding: 6px 0; font-size:13.5px; }
+  .overview-box .row .k{ width:110px; flex-shrink:0; font-weight:700; color: var(--brand-deep); }
+  .overview-box .row .v{ font-family: var(--mono); font-size:12.5px; color: var(--charcoal); }
+
+  h2.section-title{
+    font-size:13px; font-weight:800; text-transform:uppercase; letter-spacing:.05em; color: var(--graphite);
+    margin: 50px 0 14px; padding-bottom:8px; border-bottom:1px solid var(--hairline);
+  }
+
+  .endpoint{
+    border:1px solid var(--hairline); border-radius:14px; margin-bottom: 22px; overflow:hidden; scroll-margin-top: 24px;
+  }
+  .endpoint-head{ display:flex; align-items:center; gap:12px; padding: 16px 20px; background: var(--cloud); }
+  .method{
+    font-family: var(--mono); font-size:11.5px; font-weight:800; padding: 4px 10px; border-radius:6px; flex-shrink:0;
+  }
+  .method.get{ background: var(--get-soft); color: var(--get); }
+  .method.post{ background: var(--post-soft); color: var(--post); }
+  .path{ font-family: var(--mono); font-size:14px; font-weight:700; color: var(--ink); }
+  .endpoint-title{ font-size:13.5px; color: var(--graphite); margin-left:auto; }
+
+  .endpoint-body{ padding: 20px 22px 22px; }
+  .endpoint-desc{ font-size:13.5px; color: var(--charcoal); line-height:1.7; margin: 0 0 18px; }
+
+  .subhead{ font-size:12px; font-weight:800; color: var(--ink); margin: 18px 0 8px; }
+  .subhead:first-child{ margin-top:0; }
+
+  table.param-table{ width:100%; border-collapse:collapse; font-size:12.5px; margin-bottom: 4px; }
+  table.param-table th{
+    text-align:left; font-size:10.5px; text-transform:uppercase; letter-spacing:.04em; color: var(--graphite);
+    padding: 6px 10px; border-bottom:1px solid var(--hairline);
+  }
+  table.param-table td{ padding: 9px 10px; border-bottom:1px solid var(--hairline); vertical-align:top; }
+  table.param-table code{ font-family: var(--mono); font-size:12px; background: var(--cloud); padding:1px 5px; border-radius:4px; }
+  .req-badge{ font-size:10px; font-weight:800; padding:1px 6px; border-radius:4px; }
+  .req-badge.required{ background: var(--coral-soft); color: var(--coral); }
+  .req-badge.optional{ background: var(--hairline); color: var(--graphite); }
+
+  .code-block{ position:relative; background:#1a1d21; border-radius:10px; margin: 6px 0 4px; overflow:hidden; }
+  .code-block .cb-head{
+    display:flex; justify-content:space-between; align-items:center;
+    padding: 8px 14px; background:#22262c; font-family: var(--mono); font-size:11px; color:#9aa3ad;
+  }
+  .code-block pre{ margin:0; padding: 14px 16px; overflow-x:auto; font-family: var(--mono); font-size:12.3px; line-height:1.7; color:#e3e6e9; }
+  .copy-btn{
+    font-family: var(--sans); font-size:10.5px; font-weight:700; color:#9aa3ad;
+    background: rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.12); border-radius:6px;
+    padding: 3px 9px; cursor:pointer;
+  }
+  .copy-btn:hover{ color:#fff; }
+  .copy-btn.copied{ background: var(--get); color:#fff; border-color: var(--get); }
+
+  .jk{ color:#7dcfff; } .js{ color:#e0af68; } .jn{ color:#bb9af7; } .jb{ color:#ff9e64; } .jp{ color:#9aa3ad; }
+
+  .status-row{
+    display:flex; align-items:center; gap:10px; margin-top: 16px; margin-bottom:6px;
+  }
+  .status-code{ font-family: var(--mono); font-size:12px; font-weight:800; padding: 2px 8px; border-radius:5px; }
+  .status-code.s2{ background: var(--get-soft); color: var(--get); }
+  .status-code.s4{ background: var(--coral-soft); color: var(--coral); }
+  .status-label{ font-size:12.5px; color: var(--charcoal); }
+
+  .errors-note{
+    font-size:12px; color: var(--graphite); background: var(--cloud); border-radius:8px; padding:10px 14px; margin-top:8px; line-height:1.6;
+  }
+
+  @media (max-width: 860px){
+    .sidebar{ display:none; }
+    .content{ padding: 30px 20px 80px; }
+  }
+</style>
+</head>
+<body>
+<div class="layout">
+
+  <aside class="sidebar">
+    <div class="logo">WON 실습뱅킹 API</div>
+    <div class="ver">v1.0 · 교육용 Mock API</div>
+    <nav>
+      <div class="group-label">개요</div>
+      <a href="#overview">시작하기</a>
+
+      <div class="group-label">계좌</div>
+      <a href="#get-accounts"><span class="m get">GET</span> /accounts</a>
+      <a href="#get-account-detail"><span class="m get">GET</span> /accounts/:id</a>
+
+      <div class="group-label">거래내역</div>
+      <a href="#get-transactions"><span class="m get">GET</span> /transactions</a>
+      <a href="#get-transaction-detail"><span class="m get">GET</span> /transactions/:id</a>
+
+      <div class="group-label">이체</div>
+      <a href="#get-transfer-lookup"><span class="m get">GET</span> /transfer/lookup</a>
+      <a href="#post-transfers"><span class="m post">POST</span> /transfers</a>
+    </nav>
+  </aside>
+
+  <main class="content">
+    <h1 class="page-title">WON 실습뱅킹 API 명세서</h1>
+    <p class="page-desc">이 문서는 실습용 은행 앱 목업 화면(홈, 이체, 거래내역조회)이 필요로 하는 API를 정의합니다. 아래 명세를 그대로 구현하면, 목업 화면의 더미 데이터를 실제 서버 응답으로 교체할 수 있습니다.</p>
+
+    <div class="overview-box" id="overview">
+      <div class="row"><span class="k">Base URL</span><span class="v">http://localhost:4000/api</span></div>
+      <div class="row"><span class="k">Content-Type</span><span class="v">application/json</span></div>
+      <div class="row"><span class="k">인증</span><span class="v">실습 범위에서는 생략 (로그인/토큰 없이 호출 가능)</span></div>
+      <div class="row"><span class="k">CORS</span><span class="v">모든 origin 허용 (실습 목적)</span></div>
+      <div class="row"><span class="k">에러 응답 형식</span><span class="v">{ "message": "에러 설명" }</span></div>
+    </div>
+
+    <h2 class="section-title">계좌 (Accounts)</h2>
+
+    <!-- ===================== GET /accounts ===================== -->
+    <div class="endpoint" id="get-accounts">
+      <div class="endpoint-head">
+        <span class="method get">GET</span>
+        <span class="path">/api/accounts</span>
+        <span class="endpoint-title">전체 계좌 목록 조회</span>
+      </div>
+      <div class="endpoint-body">
+        <p class="endpoint-desc">로그인한 사용자가 보유한 모든 계좌 목록을 반환합니다. 홈 화면의 계좌 리스트, 총자산 계산, 이체 화면의 출금계좌 선택 드롭다운에 사용됩니다.</p>
+
+        <div class="status-row"><span class="status-code s2">200 OK</span><span class="status-label">조회 성공</span></div>
+        <div class="code-block">
+          <div class="cb-head"><span>Response Body</span><button class="copy-btn" onclick="copyCode(this)">복사</button></div>
+          <pre>[
+  {
+    <span class="jk">"id"</span>: <span class="js">"acc1"</span>,
+    <span class="jk">"nickname"</span>: <span class="js">"우리 첫급여통장"</span>,
+    <span class="jk">"accountNo"</span>: <span class="js">"1002-***-123456"</span>,
+    <span class="jk">"type"</span>: <span class="js">"입출금"</span>,
+    <span class="jk">"balance"</span>: <span class="jn">2384560</span>
+  },
+  {
+    <span class="jk">"id"</span>: <span class="js">"acc2"</span>,
+    <span class="jk">"nickname"</span>: <span class="js">"우리 SUPER주거래통장"</span>,
+    <span class="jk">"accountNo"</span>: <span class="js">"1002-***-789012"</span>,
+    <span class="jk">"type"</span>: <span class="js">"저축예금"</span>,
+    <span class="jk">"balance"</span>: <span class="jn">15200000</span>
+  }
+]</pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===================== GET /accounts/:id ===================== -->
+    <div class="endpoint" id="get-account-detail">
+      <div class="endpoint-head">
+        <span class="method get">GET</span>
+        <span class="path">/api/accounts/:accountId</span>
+        <span class="endpoint-title">단일 계좌 상세 조회</span>
+      </div>
+      <div class="endpoint-body">
+        <p class="endpoint-desc">특정 계좌 하나의 상세 정보를 반환합니다.</p>
+
+        <div class="subhead">Path Parameters</div>
+        <table class="param-table">
+          <tr><th>이름</th><th>타입</th><th>설명</th></tr>
+          <tr><td><code>accountId</code></td><td>string</td><td>조회할 계좌의 id (예: <code>acc1</code>)</td></tr>
+        </table>
+
+        <div class="status-row"><span class="status-code s2">200 OK</span><span class="status-label">조회 성공</span></div>
+        <div class="code-block">
+          <div class="cb-head"><span>Response Body</span><button class="copy-btn" onclick="copyCode(this)">복사</button></div>
+          <pre>{
+  <span class="jk">"id"</span>: <span class="js">"acc1"</span>,
+  <span class="jk">"nickname"</span>: <span class="js">"우리 첫급여통장"</span>,
+  <span class="jk">"accountNo"</span>: <span class="js">"1002-***-123456"</span>,
+  <span class="jk">"type"</span>: <span class="js">"입출금"</span>,
+  <span class="jk">"balance"</span>: <span class="jn">2384560</span>
+}</pre>
+        </div>
+
+        <div class="status-row"><span class="status-code s4">404 Not Found</span><span class="status-label">존재하지 않는 계좌 id</span></div>
+        <div class="code-block">
+          <div class="cb-head"><span>Response Body</span><button class="copy-btn" onclick="copyCode(this)">복사</button></div>
+          <pre>{ <span class="jk">"message"</span>: <span class="js">"계좌를 찾을 수 없습니다"</span> }</pre>
+        </div>
+      </div>
+    </div>
+
+    <h2 class="section-title">거래내역 (Transactions)</h2>
+
+    <!-- ===================== GET /transactions ===================== -->
+    <div class="endpoint" id="get-transactions">
+      <div class="endpoint-head">
+        <span class="method get">GET</span>
+        <span class="path">/api/transactions</span>
+        <span class="endpoint-title">거래내역 목록 조회</span>
+      </div>
+      <div class="endpoint-body">
+        <p class="endpoint-desc">거래내역 목록을 최신순으로 반환합니다. 홈 화면의 최근 거래 미리보기와 거래내역조회 화면의 필터링에 사용됩니다. 쿼리 파라미터로 계좌·입출금 유형을 필터링할 수 있습니다.</p>
+
+        <div class="subhead">Query Parameters</div>
+        <table class="param-table">
+          <tr><th>이름</th><th>타입</th><th>필수</th><th>설명</th></tr>
+          <tr><td><code>accountId</code></td><td>string</td><td><span class="req-badge optional">선택</span></td><td>특정 계좌의 거래만 조회. 생략하면 전체 계좌</td></tr>
+          <tr><td><code>type</code></td><td>string</td><td><span class="req-badge optional">선택</span></td><td><code>in</code>(입금) / <code>out</code>(출금). 생략하면 전체</td></tr>
+          <tr><td><code>limit</code></td><td>number</td><td><span class="req-badge optional">선택</span></td><td>반환할 최대 건수. 생략하면 전체 반환</td></tr>
+        </table>
+
+        <div class="subhead">Example Request</div>
+        <div class="code-block">
+          <div class="cb-head"><span>GET</span><button class="copy-btn" onclick="copyCode(this)">복사</button></div>
+          <pre>/api/transactions?accountId=acc1&type=out&limit=10</pre>
+        </div>
+
+        <div class="status-row"><span class="status-code s2">200 OK</span><span class="status-label">조회 성공 (조건에 맞는 결과가 없으면 빈 배열)</span></div>
+        <div class="code-block">
+          <div class="cb-head"><span>Response Body</span><button class="copy-btn" onclick="copyCode(this)">복사</button></div>
+          <pre>[
+  {
+    <span class="jk">"id"</span>: <span class="jn">1</span>,
+    <span class="jk">"accountId"</span>: <span class="js">"acc1"</span>,
+    <span class="jk">"date"</span>: <span class="js">"2026-08-23"</span>,
+    <span class="jk">"time"</span>: <span class="js">"09:12"</span>,
+    <span class="jk">"desc"</span>: <span class="js">"스타벅스 강남점"</span>,
+    <span class="jk">"type"</span>: <span class="js">"out"</span>,
+    <span class="jk">"amount"</span>: <span class="jn">5800</span>,
+    <span class="jk">"balanceAfter"</span>: <span class="jn">2384560</span>,
+    <span class="jk">"status"</span>: <span class="js">"done"</span>
+  }
+]</pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===================== GET /transactions/:id ===================== -->
+    <div class="endpoint" id="get-transaction-detail">
+      <div class="endpoint-head">
+        <span class="method get">GET</span>
+        <span class="path">/api/transactions/:id</span>
+        <span class="endpoint-title">거래 상세 조회</span>
+      </div>
+      <div class="endpoint-body">
+        <p class="endpoint-desc">거래내역 항목 클릭 시 뜨는 상세 정보 시트에 사용됩니다.</p>
+
+        <div class="subhead">Path Parameters</div>
+        <table class="param-table">
+          <tr><th>이름</th><th>타입</th><th>설명</th></tr>
+          <tr><td><code>id</code></td><td>number</td><td>조회할 거래의 id</td></tr>
+        </table>
+
+        <div class="status-row"><span class="status-code s2">200 OK</span></div>
+        <div class="code-block">
+          <div class="cb-head"><span>Response Body</span><button class="copy-btn" onclick="copyCode(this)">복사</button></div>
+          <pre>{
+  <span class="jk">"id"</span>: <span class="jn">1</span>,
+  <span class="jk">"accountId"</span>: <span class="js">"acc1"</span>,
+  <span class="jk">"date"</span>: <span class="js">"2026-08-23"</span>,
+  <span class="jk">"time"</span>: <span class="js">"09:12"</span>,
+  <span class="jk">"desc"</span>: <span class="js">"스타벅스 강남점"</span>,
+  <span class="jk">"type"</span>: <span class="js">"out"</span>,
+  <span class="jk">"amount"</span>: <span class="jn">5800</span>,
+  <span class="jk">"balanceAfter"</span>: <span class="jn">2384560</span>,
+  <span class="jk">"status"</span>: <span class="js">"done"</span>
+}</pre>
+        </div>
+
+        <div class="status-row"><span class="status-code s4">404 Not Found</span></div>
+        <div class="code-block">
+          <div class="cb-head"><span>Response Body</span><button class="copy-btn" onclick="copyCode(this)">복사</button></div>
+          <pre>{ <span class="jk">"message"</span>: <span class="js">"거래내역을 찾을 수 없습니다"</span> }</pre>
+        </div>
+      </div>
+    </div>
+
+    <h2 class="section-title">이체 (Transfer)</h2>
+
+    <!-- ===================== GET /transfer/lookup ===================== -->
+    <div class="endpoint" id="get-transfer-lookup">
+      <div class="endpoint-head">
+        <span class="method get">GET</span>
+        <span class="path">/api/transfer/lookup</span>
+        <span class="endpoint-title">예금주 조회</span>
+      </div>
+      <div class="endpoint-body">
+        <p class="endpoint-desc">이체 화면 1단계에서 받는 분의 계좌번호를 입력했을 때, 예금주명을 조회합니다. 실제 서비스라면 은행 간 실명조회 시스템을 거치지만, 이 실습 API는 미리 등록된 더미 계좌번호 목록에서 조회합니다.</p>
+
+        <div class="subhead">Query Parameters</div>
+        <table class="param-table">
+          <tr><th>이름</th><th>타입</th><th>필수</th><th>설명</th></tr>
+          <tr><td><code>bank</code></td><td>string</td><td><span class="req-badge required">필수</span></td><td>받는 은행명 (예: <code>우리은행</code>)</td></tr>
+          <tr><td><code>accountNo</code></td><td>string</td><td><span class="req-badge required">필수</span></td><td>받는 계좌번호 (숫자만, - 없이)</td></tr>
+        </table>
+
+        <div class="subhead">Example Request</div>
+        <div class="code-block">
+          <div class="cb-head"><span>GET</span><button class="copy-btn" onclick="copyCode(this)">복사</button></div>
+          <pre>/api/transfer/lookup?bank=우리은행&accountNo=1002123456789</pre>
+        </div>
+
+        <div class="status-row"><span class="status-code s2">200 OK</span><span class="status-label">등록된 계좌를 찾음</span></div>
+        <div class="code-block">
+          <div class="cb-head"><span>Response Body</span><button class="copy-btn" onclick="copyCode(this)">복사</button></div>
+          <pre>{ <span class="jk">"ownerName"</span>: <span class="js">"김민준"</span> }</pre>
+        </div>
+
+        <div class="status-row"><span class="status-code s4">404 Not Found</span><span class="status-label">등록되지 않은 계좌번호</span></div>
+        <div class="code-block">
+          <div class="cb-head"><span>Response Body</span><button class="copy-btn" onclick="copyCode(this)">복사</button></div>
+          <pre>{ <span class="jk">"message"</span>: <span class="js">"계좌 정보를 확인할 수 없습니다"</span> }</pre>
+        </div>
+
+        <div class="errors-note">💡 실습용 더미 계좌번호: <code>1002123456789</code>(김민준), <code>1002987654321</code>(이서연), <code>1102555666777</code>(박지훈)</div>
+      </div>
+    </div>
+
+    <!-- ===================== POST /transfers ===================== -->
+    <div class="endpoint" id="post-transfers">
+      <div class="endpoint-head">
+        <span class="method post">POST</span>
+        <span class="path">/api/transfers</span>
+        <span class="endpoint-title">이체 실행</span>
+      </div>
+      <div class="endpoint-body">
+        <p class="endpoint-desc">이체를 실제로 실행합니다. 출금 계좌의 잔액을 차감하고, 새 거래내역을 생성합니다. 서버는 클라이언트가 보낸 금액을 그대로 신뢰하지 않고, <b>잔액과 최소 금액을 서버에서 다시 검증</b>합니다.</p>
+
+        <div class="subhead">Request Body</div>
+        <table class="param-table">
+          <tr><th>이름</th><th>타입</th><th>필수</th><th>설명</th></tr>
+          <tr><td><code>fromAccountId</code></td><td>string</td><td><span class="req-badge required">필수</span></td><td>출금할 내 계좌 id</td></tr>
+          <tr><td><code>toBank</code></td><td>string</td><td><span class="req-badge required">필수</span></td><td>받는 은행명</td></tr>
+          <tr><td><code>toAccountNo</code></td><td>string</td><td><span class="req-badge required">필수</span></td><td>받는 계좌번호</td></tr>
+          <tr><td><code>toOwnerName</code></td><td>string</td><td><span class="req-badge required">필수</span></td><td>받는 분 예금주명 (lookup 결과)</td></tr>
+          <tr><td><code>amount</code></td><td>number</td><td><span class="req-badge required">필수</span></td><td>이체 금액 (1,000원 이상)</td></tr>
+        </table>
+
+        <div class="subhead">Example Request</div>
+        <div class="code-block">
+          <div class="cb-head"><span>Request Body</span><button class="copy-btn" onclick="copyCode(this)">복사</button></div>
+          <pre>{
+  <span class="jk">"fromAccountId"</span>: <span class="js">"acc1"</span>,
+  <span class="jk">"toBank"</span>: <span class="js">"우리은행"</span>,
+  <span class="jk">"toAccountNo"</span>: <span class="js">"1002987654321"</span>,
+  <span class="jk">"toOwnerName"</span>: <span class="js">"이서연"</span>,
+  <span class="jk">"amount"</span>: <span class="jn">30000</span>
+}</pre>
+        </div>
+
+        <div class="status-row"><span class="status-code s2">201 Created</span><span class="status-label">이체 성공</span></div>
+        <div class="code-block">
+          <div class="cb-head"><span>Response Body</span><button class="copy-btn" onclick="copyCode(this)">복사</button></div>
+          <pre>{
+  <span class="jk">"transaction"</span>: {
+    <span class="jk">"id"</span>: <span class="jn">8</span>,
+    <span class="jk">"accountId"</span>: <span class="js">"acc1"</span>,
+    <span class="jk">"date"</span>: <span class="js">"2026-08-23"</span>,
+    <span class="jk">"time"</span>: <span class="js">"14:32"</span>,
+    <span class="jk">"desc"</span>: <span class="js">"이서연"</span>,
+    <span class="jk">"type"</span>: <span class="js">"out"</span>,
+    <span class="jk">"amount"</span>: <span class="jn">30000</span>,
+    <span class="jk">"balanceAfter"</span>: <span class="jn">2354560</span>,
+    <span class="jk">"status"</span>: <span class="js">"done"</span>
+  },
+  <span class="jk">"account"</span>: { <span class="jk">"id"</span>: <span class="js">"acc1"</span>, <span class="jk">"balance"</span>: <span class="jn">2354560</span> }
+}</pre>
+        </div>
+
+        <div class="status-row"><span class="status-code s4">400 Bad Request</span><span class="status-label">잔액 부족 / 최소금액 미만 / 필드 누락</span></div>
+        <div class="code-block">
+          <div class="cb-head"><span>Response Body</span><button class="copy-btn" onclick="copyCode(this)">복사</button></div>
+          <pre>{ <span class="jk">"message"</span>: <span class="js">"잔액이 부족합니다"</span> }</pre>
+        </div>
+
+        <div class="status-row"><span class="status-code s4">404 Not Found</span><span class="status-label">존재하지 않는 출금 계좌</span></div>
+        <div class="code-block">
+          <div class="cb-head"><span>Response Body</span><button class="copy-btn" onclick="copyCode(this)">복사</button></div>
+          <pre>{ <span class="jk">"message"</span>: <span class="js">"출금 계좌를 찾을 수 없습니다"</span> }</pre>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+  function copyCode(btn){
+    const codeBody = btn.closest('.code-block').querySelector('pre');
+    const text = codeBody.innerText;
+    function showResult(success){
+      const original = btn.textContent;
+      btn.textContent = success ? '복사됨!' : '복사 실패';
+      btn.classList.toggle('copied', success);
+      setTimeout(() => { btn.textContent = original; btn.classList.remove('copied'); }, 1500);
+    }
+    function fallbackCopy(){
+      try {
+        const range = document.createRange();
+        range.selectNodeContents(codeBody);
+        const sel = window.getSelection();
+        sel.removeAllRanges();
+        sel.addRange(range);
+        const ok = document.execCommand('copy');
+        sel.removeAllRanges();
+        showResult(ok);
+      } catch (err) { showResult(false); }
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(() => showResult(true)).catch(fallbackCopy);
+    } else {
+      fallbackCopy();
+    }
+  }
+</script>
+</body>
+</html>
