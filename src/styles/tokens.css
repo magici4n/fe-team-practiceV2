@@ -1,0 +1,23 @@
+:root {
+  --brand: #0067ac;
+  --brand-deep: #004b80;
+  --brand-bright: #1e88d6;
+  --brand-soft: #e8f1f9;
+  --brand-softer: #f3f8fc;
+  --ink: #1a1d21;
+  --charcoal: #40464d;
+  --graphite: #6b7280;
+  --steel: #c4cad1;
+  --hairline: #e6e9ed;
+  --canvas: #ffffff;
+  --cloud: #f5f7f9;
+  --coral: #e8483a;
+  --coral-soft: #fdeceb;
+  --mint: #14875a;
+  --mint-soft: #e8f6f0;
+  --amber: #c07a17;
+  --amber-soft: #fdf3e2;
+  --sans: "Pretendard", "Apple SD Gothic Neo", -apple-system, "Segoe UI", sans-serif;
+  --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+}
+

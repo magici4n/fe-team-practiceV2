@@ -1,0 +1,239 @@
+.home-page .greeting {
+  padding: 4px 20px 14px;
+}
+
+.home-page .greeting .hi {
+  font-size: 13px;
+  color: var(--graphite);
+  margin-bottom: 2px;
+}
+
+.home-page .greeting .name {
+  font-size: 19px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+/* =========================================
+   6. 총 자산 카드 (total-card)
+   ========================================= */
+.home-page .total-card {
+  margin: 0 20px 18px;
+  background: linear-gradient(135deg, var(--brand), var(--brand-deep));
+  border-radius: 18px;
+  padding: 20px 22px;
+  color: #fff;
+}
+
+.home-page .total-card .label-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.home-page .total-card .label {
+  font-size: 12.5px;
+  font-weight: 400;
+  opacity: 0.85;
+}
+
+.home-page .total-card .eye-btn {
+  background: rgba(255, 255, 255, 0.18);
+  border: none;
+  border-radius: 8px;
+  color: #fff;
+  font-size: 11px;
+  padding: 4px 10px;
+  cursor: pointer;
+  font-family: var(--sans);
+}
+
+.home-page .total-card .amount {
+  font-size: 26px;
+  font-weight: 800;
+  font-family: var(--mono);
+  letter-spacing: -0.02em;
+}
+
+.home-page .total-card .sub {
+  font-size: 11.5px;
+  opacity: 0.75;
+  margin-top: 6px;
+}
+
+/* =========================================
+   7. 퀵메뉴 (quick-menu)
+   ========================================= */
+.home-page .quick-menu {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 6px;
+  padding: 0 16px 20px;
+}
+
+/* 이동하는 항목은 a, 동작만 하는 항목은 button이라 둘 다 대상으로 잡습니다 */
+.home-page .quick-menu a,
+.home-page .quick-menu button {
+  background: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  font-family: var(--sans);
+  padding: 6px 2px;
+}
+
+.home-page .quick-menu .icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  background: var(--brand-softer);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 19px;
+}
+
+.home-page .quick-menu .lbl {
+  font-size: 11px;
+  color: var(--charcoal);
+  font-weight: 600;
+}
+
+/* =========================================
+   8. 섹션 헤더 (section-head)
+   ========================================= */
+.home-page .section-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 20px 10px;
+}
+
+/* 목업은 h3, 여기서는 heading 단계(h1 인사말 → h2 섹션 제목)를 지키기 위해 h2 사용 */
+.home-page .section-head h2 {
+  font-size: 14.5px;
+  font-weight: 800;
+  margin: 0;
+}
+
+.home-page .section-head .more {
+  font-size: 12px;
+  color: var(--graphite);
+  cursor: pointer;
+}
+
+/* =========================================
+   9. 내 계좌 (account-list / account-card)
+   ========================================= */
+.home-page .account-list {
+  padding: 0 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.home-page .account-card {
+  background: var(--canvas);
+  border: 1px solid var(--hairline);
+  border-radius: 14px;
+  padding: 14px 16px;
+  cursor: pointer;
+  transition: border-color 0.15s, transform 0.1s;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.home-page .account-card:active {
+  transform: scale(0.99);
+}
+
+.home-page .account-card:hover {
+  border-color: var(--brand-bright);
+}
+
+.home-page .account-card .left .nickname {
+  font-size: 13.5px;
+  font-weight: 700;
+  margin-bottom: 3px;
+}
+
+.home-page .account-card .left .accno {
+  font-size: 11px;
+  color: var(--graphite);
+  font-family: var(--mono);
+}
+
+.home-page .account-card .right {
+  text-align: right;
+}
+
+.home-page .account-card .right .balance {
+  font-size: 15px;
+  font-weight: 800;
+  font-family: var(--mono);
+}
+
+.home-page .account-card .right .type {
+  font-size: 10.5px;
+  color: var(--graphite);
+  margin-top: 2px;
+}
+
+/* =========================================
+   10. 최근 거래 (recent-list / recent-item / empty-state)
+   ========================================= */
+.home-page .recent-list {
+  padding: 0 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+/* JS가 만들어 넣는 거래 한 줄. HTML에는 없으므로 스타일을 미리 준비해 둡니다 */
+.home-page .recent-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 11px 2px;
+  border-bottom: 1px solid var(--hairline);
+  cursor: pointer;
+}
+
+.home-page .recent-item:last-child {
+  border-bottom: none;
+}
+
+.home-page .recent-item .desc {
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+
+.home-page .recent-item .meta {
+  font-size: 11px;
+  color: var(--graphite);
+}
+
+.home-page .recent-item .amount-cell {
+  text-align: right;
+  font-family: var(--mono);
+  font-size: 13.5px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+/* 색만으로 입출금을 구분하면 색각 이상 사용자가 읽지 못하므로
+   +/- 부호와 sr-only 텍스트("입금"/"출금")를 함께 넣습니다 */
+.home-page .recent-item .amount-cell.plus {
+  color: var(--brand-deep);
+}
+
+.home-page .recent-item .amount-cell.minus {
+  color: var(--coral);
+}
+
