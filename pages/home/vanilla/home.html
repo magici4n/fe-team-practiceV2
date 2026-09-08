@@ -5,8 +5,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>WON 실습뱅킹 - 홈</title>
   <link rel="stylesheet" href="home.css" />
+  <script src="home.js" defer></script>
 </head>
 <body>
+
+<!-- 실습용 개발 도구. 실제 앱에는 없는 요소라 폰 프레임 바깥에 둡니다 -->
+<div class="conn-status loading" id="connStatus" role="status">
+  <span class="dot loading"></span> API 서버 연결 확인 중
+</div>
+
+<noscript>
+  <p class="noscript-warning">
+    이 화면은 자바스크립트로 계좌 정보를 불러옵니다. 브라우저에서 자바스크립트를 켜주세요.
+  </p>
+</noscript>
 
 <div class="phone">
   <!-- 데모 전시용 가짜 상태바 (실제 OS 상태바 아님) -->
@@ -19,16 +31,16 @@
        header: 3페이지 공통 상단바
        =================================================== -->
   <header class="app-header">
-    <a href="/" class="brand" aria-label="홈으로 이동">
+    <a href="home.html" class="brand" aria-label="홈으로 이동">
       <span class="brand-mark" aria-hidden="true">W</span>
       <span class="brand-name">WON 실습뱅킹</span>
     </a>
     <div class="header-icons">
-      <button type="button" aria-label="알림">
+      <button type="button" aria-label="알림" data-toast="알림 화면은 이번 실습 범위 밖입니다">
         <span aria-hidden="true">🔔</span>
         <span class="badge-dot" aria-hidden="true"></span>
       </button>
-      <button type="button" aria-label="전체 메뉴 열기">
+      <button type="button" aria-label="전체 메뉴 열기" data-toast="전체 메뉴는 이번 실습 범위 밖입니다">
         <span aria-hidden="true">☰</span>
       </button>
     </div>
@@ -45,101 +57,74 @@
       <h1 id="greeting-heading" class="name">김민준님</h1>
     </section>
 
-    <!-- 총 자산 카드 -->
+    <!-- 총 자산 카드: 금액과 문구는 JS가 채웁니다 -->
     <section aria-labelledby="total-heading" class="total-card">
       <div class="label-row">
         <h2 id="total-heading" class="label">총 자산</h2>
-        <button type="button" class="eye-btn" aria-pressed="false">숨기기</button>
+        <button type="button" class="eye-btn" id="toggleMaskBtn" aria-pressed="false">숨기기</button>
       </div>
       <p class="amount">
         <span class="sr-only">총 자산 금액</span>
-        22,584,560원
+        <!-- JS가 이 span의 textContent만 바꾸므로 sr-only 안내는 유지됩니다 -->
+        <span id="totalAmount">-</span>
       </p>
-      <p class="sub">계좌 3개 합산 금액입니다</p>
+      <p class="sub" id="totalSub">계좌 정보를 불러오는 중입니다</p>
     </section>
 
-    <!-- 퀵메뉴: 이체 / 거래내역 / 상품 / 자산관리 / 전체 -->
+    <!-- 퀵메뉴: 이동하는 항목은 a, 동작만 하는 항목은 button -->
     <nav aria-label="빠른 메뉴" class="quick-menu">
-      <a href="#">
+      <a href="transfer.html">
         <span class="icon" aria-hidden="true">💳</span>
         <span class="lbl">이체</span>
       </a>
-      <a href="#">
+      <a href="history.html">
         <span class="icon" aria-hidden="true">📋</span>
         <span class="lbl">거래내역</span>
       </a>
-      <a href="#">
+      <button type="button" data-toast="상품 화면은 이번 실습 범위 밖입니다">
         <span class="icon" aria-hidden="true">📦</span>
         <span class="lbl">상품</span>
-      </a>
-      <a href="#">
+      </button>
+      <button type="button" data-toast="자산관리 화면은 이번 실습 범위 밖입니다">
         <span class="icon" aria-hidden="true">📊</span>
         <span class="lbl">자산관리</span>
-      </a>
-      <a href="#">
+      </button>
+      <button type="button" data-toast="전체 메뉴는 이번 실습 범위 밖입니다">
         <span class="icon" aria-hidden="true">⋯</span>
         <span class="lbl">전체</span>
-      </a>
+      </button>
     </nav>
 
-    <!-- 내 계좌 -->
+    <!-- 내 계좌: 목록은 JS가 채웁니다 -->
     <section aria-labelledby="accounts-heading">
       <div class="section-head">
         <h2 id="accounts-heading">내 계좌</h2>
-        <a href="#" class="more">전체보기</a>
+        <a href="history.html" class="more">전체보기</a>
       </div>
-      <ul class="account-list" role="list">
+      <!-- 라이브 리전은 페이지 로드 시점부터 DOM에 있어야 내부 변경이 읽힙니다.
+           그래서 role/aria-live를 안쪽 문구가 아니라 컨테이너에 겁니다 -->
+      <ul class="account-list" id="accountList" role="list" aria-live="polite" aria-busy="true">
         <li>
-          <a href="#" class="account-card">
-            <div class="left">
-              <h3 class="nickname">우리 첫급여통장</h3>
-              <p class="accno">1002-***-123456</p>
-            </div>
-            <div class="right">
-              <p class="balance">2,384,560원</p>
-              <p class="type">입출금</p>
-            </div>
-          </a>
-        </li>
-        <li>
-          <a href="#" class="account-card">
-            <div class="left">
-              <h3 class="nickname">우리 SUPER주거래통장</h3>
-              <p class="accno">1002-***-789012</p>
-            </div>
-            <div class="right">
-              <p class="balance">15,200,000원</p>
-              <p class="type">저축예금</p>
-            </div>
-          </a>
-        </li>
-        <li>
-          <a href="#" class="account-card">
-            <div class="left">
-              <h3 class="nickname">우리 청년도약계좌</h3>
-              <p class="accno">1002-***-456789</p>
-            </div>
-            <div class="right">
-              <p class="balance">5,000,000원</p>
-              <p class="type">적금</p>
-            </div>
-          </a>
+          <p class="empty-state">
+            <span class="inline-spinner" aria-hidden="true"></span>계좌 정보를 불러오는 중
+          </p>
         </li>
       </ul>
     </section>
 
-    <!-- 최근 거래 -->
+    <!-- 최근 거래: 목록은 JS가 채웁니다 -->
     <section aria-labelledby="transactions-heading">
       <div class="section-head">
         <h2 id="transactions-heading">최근 거래</h2>
-        <a href="#" class="more">전체보기</a>
+        <a href="history.html" class="more">전체보기</a>
       </div>
-      <div class="recent-list">
-        <!-- 데이터 로드 실패 상태: 사용자가 즉시 알아야 하는 오류이므로 role="alert" -->
-        <p role="alert" class="empty-state">
-          최근 거래를 불러오지 못했습니다 (서버에 연결할 수 없습니다)
-        </p>
-      </div>
+      <ul class="recent-list" id="recentList" role="list" aria-live="polite" aria-busy="true">
+        <li>
+          <p class="empty-state">
+            <span class="inline-spinner" aria-hidden="true"></span>최근 거래를 불러오는 중
+          </p>
+        </li>
+      </ul>
     </section>
 
   </main>
@@ -149,24 +134,27 @@
        =================================================== -->
   <footer>
     <nav aria-label="주요 메뉴" class="bottom-nav">
-      <a href="/" class="nav-btn active" aria-current="page">
+      <a href="home.html" class="nav-btn active" aria-current="page">
         <span class="nav-icon" aria-hidden="true">🏠</span>
         <span class="nav-lbl">홈</span>
       </a>
-      <a href="#" class="nav-btn">
+      <a href="transfer.html" class="nav-btn">
         <span class="nav-icon" aria-hidden="true">💳</span>
         <span class="nav-lbl">이체</span>
       </a>
-      <a href="#" class="nav-btn">
+      <a href="history.html" class="nav-btn">
         <span class="nav-icon" aria-hidden="true">📋</span>
         <span class="nav-lbl">거래내역</span>
       </a>
-      <a href="#" class="nav-btn">
+      <button type="button" class="nav-btn" data-toast="전체 메뉴는 이번 실습 범위 밖입니다">
         <span class="nav-icon" aria-hidden="true">⋯</span>
         <span class="nav-lbl">전체</span>
-      </a>
+      </button>
     </nav>
   </footer>
+
+  <!-- 순간 알림. role="status"라 내용이 바뀌면 스크린리더가 읽어줍니다 -->
+  <div class="toast" id="toast" role="status"></div>
 
 </div>
 

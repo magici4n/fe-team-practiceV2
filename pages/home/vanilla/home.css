@@ -292,8 +292,9 @@ main.screen::-webkit-scrollbar-track {
   padding: 0 16px 20px;
 }
 
-/* 목업은 button, 여기서는 실제 페이지 이동용 a 태그를 사용 */
-.quick-menu a {
+/* 이동하는 항목은 a, 동작만 하는 항목은 button이라 둘 다 대상으로 잡습니다 */
+.quick-menu a,
+.quick-menu button {
   background: none;
   display: flex;
   flex-direction: column;
@@ -404,13 +405,56 @@ main.screen::-webkit-scrollbar-track {
 }
 
 /* =========================================
-   10. 최근 거래 (recent-list / empty-state)
+   10. 최근 거래 (recent-list / recent-item / empty-state)
    ========================================= */
 .recent-list {
   padding: 0 20px;
   display: flex;
   flex-direction: column;
   gap: 2px;
+}
+
+/* JS가 만들어 넣는 거래 한 줄. HTML에는 없으므로 스타일을 미리 준비해 둡니다 */
+.recent-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 11px 2px;
+  border-bottom: 1px solid var(--hairline);
+  cursor: pointer;
+}
+
+.recent-item:last-child {
+  border-bottom: none;
+}
+
+.recent-item .desc {
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+
+.recent-item .meta {
+  font-size: 11px;
+  color: var(--graphite);
+}
+
+.recent-item .amount-cell {
+  text-align: right;
+  font-family: var(--mono);
+  font-size: 13.5px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+/* 색만으로 입출금을 구분하면 색각 이상 사용자가 읽지 못하므로
+   +/- 부호와 sr-only 텍스트("입금"/"출금")를 함께 넣습니다 */
+.recent-item .amount-cell.plus {
+  color: var(--brand-deep);
+}
+
+.recent-item .amount-cell.minus {
+  color: var(--coral);
 }
 
 .empty-state {
@@ -420,8 +464,172 @@ main.screen::-webkit-scrollbar-track {
   font-size: 13px;
 }
 
+.empty-state.error {
+  color: var(--coral);
+}
+
 /* =========================================
-   11. 하단 탭바 (bottom-nav)
+   11. 로딩 스피너
+   ========================================= */
+.inline-spinner {
+  display: inline-block;
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  border: 2px solid rgba(0, 0, 0, 0.12);
+  border-top-color: var(--brand);
+  animation: spin 0.7s linear infinite;
+  vertical-align: middle;
+  margin-right: 6px;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* =========================================
+   12. 연결 상태 배너 (실습용 개발 도구)
+   ========================================= */
+.conn-status {
+  width: 390px;
+  max-width: 100%;
+  margin: 0 0 14px;
+  padding: 9px 14px;
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.6;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.conn-status.ok {
+  background: var(--mint-soft);
+  color: var(--mint);
+  border: 1px solid #c6ead9;
+}
+
+.conn-status.error {
+  background: var(--coral-soft);
+  color: var(--coral);
+  border: 1px solid #f3c6c6;
+}
+
+.conn-status.loading {
+  background: #f0f4f8;
+  color: var(--charcoal);
+  border: 1px solid #dde5ec;
+}
+
+.conn-status code {
+  font-family: var(--mono);
+  background: rgba(0, 0, 0, 0.06);
+  padding: 1px 5px;
+  border-radius: 4px;
+}
+
+.conn-status button {
+  margin-left: auto;
+  background: var(--canvas);
+  border: 1px solid currentColor;
+  border-radius: 7px;
+  padding: 4px 10px;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: inherit;
+}
+
+.dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.dot.ok { background: var(--mint); }
+.dot.error { background: var(--coral); }
+.dot.loading {
+  background: var(--graphite);
+  animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+.noscript-warning {
+  width: 390px;
+  max-width: 100%;
+  margin: 0 0 14px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: var(--amber-soft);
+  color: var(--amber);
+  border: 1px solid #f0dcb8;
+  font-size: 12.5px;
+}
+
+/* =========================================
+   13. 토스트 (순간 알림)
+   ========================================= */
+.toast {
+  position: absolute;
+  left: 50%;
+  bottom: 90px;
+  transform: translateX(-50%) translateY(10px);
+  background: rgba(20, 25, 30, 0.92);
+  color: #fff;
+  font-size: 12.5px;
+  font-weight: 600;
+  padding: 10px 18px;
+  border-radius: 9999px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s, transform 0.2s;
+  z-index: 30;
+  white-space: nowrap;
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* =========================================
+   14. 접근성 보정
+   ========================================= */
+
+/* .recent-list / .account-list가 display:flex라 hidden 속성이 무시됩니다 */
+[hidden] {
+  display: none !important;
+}
+
+/* OS의 "동작 줄이기"를 켠 사용자에게는 회전·슬라이드를 쓰지 않습니다.
+   전정기관 질환이나 편두통이 있으면 실제로 어지럼증을 유발합니다.
+   다만 완전히 멈추면 로딩 중인지 알 수 없으므로 위치가 바뀌지 않는
+   투명도 변화로 대체합니다. */
+@media (prefers-reduced-motion: reduce) {
+  .inline-spinner {
+    animation: fade 1.2s ease-in-out infinite;
+  }
+  .toast {
+    transition: opacity 0.2s;
+  }
+  .account-card {
+    transition: none;
+  }
+}
+
+@keyframes fade {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+
+/* =========================================
+   15. 하단 탭바 (bottom-nav)
    ========================================= */
 .bottom-nav {
   position: absolute; /* .phone(position:relative) 기준으로 고정 */
